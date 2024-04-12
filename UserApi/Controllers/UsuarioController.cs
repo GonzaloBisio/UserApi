@@ -4,7 +4,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis.Elfie.Diagnostics;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using UserApi.Context;
 using UserApi.Models;
 
@@ -15,10 +17,12 @@ namespace UserApi.Controllers
     public class UsuarioController : ControllerBase
     {
         private readonly AppDbContext _context;
+        private readonly ILogger<UsuarioController> _logger;
 
-        public UsuarioController(AppDbContext context)
+        public UsuarioController(AppDbContext context, ILogger<UsuarioController> logger)
         {
             _context = context;
+            _logger = logger;
         }
 
         // GET: api/Usuarios
@@ -64,15 +68,16 @@ namespace UserApi.Controllers
             {
                 await _context.SaveChangesAsync();
             }
-            catch (DbUpdateConcurrencyException)
+            catch (DbUpdateConcurrencyException ex)
             {
+                _logger.LogError(ex, "Concurrency error occurred updating user with ID {UserId}.", id); 
                 if (!UsuarioExists(id))
                 {
-                    return NotFound();
+                    return NotFound(new ProblemDetails { Title = "Not Found", Detail = $"User with ID {id} was not found." });
                 }
                 else
                 {
-                    throw;
+                    return StatusCode(StatusCodes.Status500InternalServerError, new ProblemDetails { Title = "Error", Detail = "An error occurred while updating the user." });
                 }
             }
 
@@ -158,26 +163,19 @@ namespace UserApi.Controllers
         public async Task<ActionResult<Usuario>> PostUsuario(Usuario usuario)
         {
             _context.Usuarios.Add(usuario);
-            await _context.SaveChangesAsync();
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateException ex)
+            {
+                _logger.LogError(ex, "An error occurred while creating a new user."); 
+                return StatusCode(StatusCodes.Status500InternalServerError, new ProblemDetails { Title = "Error", Detail = "An error occurred while creating the user." });
+            }
 
             return CreatedAtAction("GetUsuario", new { id = usuario.Id }, usuario);
         }
 
-        // DELETE: api/Usuarios/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteUsuario(int id)
-        {
-            var usuario = await _context.Usuarios.FindAsync(id);
-            if (usuario == null)
-            {
-                return NotFound();
-            }
-
-            _context.Usuarios.Remove(usuario);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
-        }
 
         private bool UsuarioExists(int id)
         {
