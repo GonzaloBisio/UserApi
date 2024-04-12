@@ -6,7 +6,8 @@ User API is a RESTful api that allows managing user data within an application. 
 ## Prerequisites
 Before you begin, ensure you have met the following requirements:
 - .NET 8 SDK or later
-- SQL Server (LocalDB or any SQL Server instance)
+- SQL Server Express to persist data in a database called `UserDB` (configured in `appsettings.json`)
+- SQL Server Management Studio (SSMS) to view and manage the stored data
 - An IDE like Visual Studio or Visual Studio Code
 
 ## Installation
@@ -65,3 +66,12 @@ This API includes Swagger, an interactive documentation platform for testing end
 - `PUT /api/Usuario/Deactivate/{id}`
 - Description: Deactivate a user, setting them as inactive.
 - Parameters: `id` - The ID of the user.
+
+- ## Database Configuration
+The application is configured to use SQL Server Express. The default connection string in `appsettings.json` is:
+
+```json
+  "ConnectionStrings": {
+    "Connection": "Server=.;Database=UserDB;Trusted_Connection=true;TrustServerCertificate=true"
+  }
+
