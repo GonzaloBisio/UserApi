@@ -4,20 +4,19 @@
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable> <!--//habilita tipo de dato nulo-->
     <ImplicitUsings>enable</ImplicitUsings> <!--//Automaticamente agrega los using necesarios (imports)-->
-	<InvariantGlobalization>true</InvariantGlobalization>
+	<InvariantGlobalization>false</InvariantGlobalization>
   </PropertyGroup>
-
-  <ItemGroup>
-    <Compile Remove="Models\Person.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="Models\Person.cs" />
-  </ItemGroup>
 
 	<!--//Administrador de paquetes microsoft-->
   <ItemGroup>
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" /> <!--//Paquete para documentacion Swagger-->
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.4" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.4" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.4">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.2" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" /> <!--//Paquete para documentacion Swagger-->
   </ItemGroup>
 
 </Project>
