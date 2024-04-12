@@ -1,7 +1,7 @@
 # User API
 
 ## Introduction
-User API is a RESTful web service that allows managing user data within an application. It provides endpoints for creating, retrieving, updating, and deleting user information, as well as special functionalities for handling user activity status.
+User API is a RESTful api that allows managing user data within an application. It provides endpoints for creating, retrieving, updating, and deleting user information, as well as special functionalities for handling user activity status.
 
 ## Prerequisites
 Before you begin, ensure you have met the following requirements:
