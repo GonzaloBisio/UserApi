@@ -14,12 +14,12 @@ namespace UserApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UsuarioController : ControllerBase
+    public class UserController : ControllerBase
     {
         private readonly AppDbContext _context;
-        private readonly ILogger<UsuarioController> _logger;
+        private readonly ILogger<UserController> _logger;
 
-        public UsuarioController(AppDbContext context, ILogger<UsuarioController> logger)
+        public UserController(AppDbContext context, ILogger<UserController> logger)
         {
             _context = context;
             _logger = logger;
@@ -27,14 +27,14 @@ namespace UserApi.Controllers
 
         // GET: api/Usuarios
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Usuario>>> GetUsuarios()
+        public async Task<ActionResult<IEnumerable<User>>> GetUsuarios()
         {
             return await _context.Usuarios.ToListAsync();
         }
 
         // GET: api/Usuarios/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Usuario>> GetUsuario(int id)
+        public async Task<ActionResult<User>> GetUsuario(int id)
         {
             var usuario = await _context.Usuarios.FindAsync(id);
 
@@ -48,14 +48,14 @@ namespace UserApi.Controllers
 
         // GET: api/Usuarios/Active
         [HttpGet("Active")]
-        public async Task<ActionResult<IEnumerable<Usuario>>> GetActiveUsuarios()
+        public async Task<ActionResult<IEnumerable<User>>> GetActiveUsuarios()
         {
             return await _context.Usuarios.Where(u => u.Active).ToListAsync();
         }
 
         // PUT: api/Usuarios/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutUsuario(int id, Usuario usuario)
+        public async Task<IActionResult> PutUsuario(int id, User usuario)
         {
             if (id != usuario.Id)
             {
@@ -160,7 +160,7 @@ namespace UserApi.Controllers
 
         // POST: api/Usuarios
         [HttpPost]
-        public async Task<ActionResult<Usuario>> PostUsuario(Usuario usuario)
+        public async Task<ActionResult<User>> PostUsuario(User usuario)
         {
             _context.Usuarios.Add(usuario);
             try
@@ -169,12 +169,13 @@ namespace UserApi.Controllers
             }
             catch (DbUpdateException ex)
             {
-                _logger.LogError(ex, "An error occurred while creating a new user."); 
+                _logger.LogError(ex, "An error occurred while creating a new user.");
                 return StatusCode(StatusCodes.Status500InternalServerError, new ProblemDetails { Title = "Error", Detail = "An error occurred while creating the user." });
             }
 
-            return CreatedAtAction("GetUsuario", new { id = usuario.Id }, usuario);
+            return CreatedAtAction(nameof(GetUsuario), new { id = usuario.Id }, usuario);
         }
+
 
 
         private bool UsuarioExists(int id)
